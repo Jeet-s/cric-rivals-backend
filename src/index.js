@@ -9,6 +9,6 @@ app.get("*", (req, res) => {
   });
 });
 
-app.listen(port, "localhost", () => {
+app.listen(port, () => {
   console.log("listening on *:3000");
 });
