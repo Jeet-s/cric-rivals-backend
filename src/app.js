@@ -12,6 +12,8 @@ require("./services/passport");
 
 const app = express();
 
+app.set("view engine", "ejs");
+
 socketService(http.createServer(app));
 
 app.use(cors());
