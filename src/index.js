@@ -9,6 +9,8 @@ app.get("*", (req, res) => {
   });
 });
 
+console.log("port=>", port);
+
 app.listen(port, () => {
   console.log("listening on *:3000");
 });
