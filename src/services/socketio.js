@@ -10,14 +10,17 @@ module.exports = function socket(server) {
   });
 
   io.on("connection", (socket) => {
+    console.log("user connected");
     socket.on("disconnect", () => {
       console.log("user disconnected");
     });
 
     socket.on("create-game", (roomId) => {
       if (!io.sockets.adapter.rooms.has(roomId)) {
+        console.log("create", roomId);
         socket.join(roomId);
       } else {
+        console.log("error create", roomId);
         socket.emit("error", "Room Id not available");
       }
     });
@@ -28,14 +31,16 @@ module.exports = function socket(server) {
         io.sockets.adapter.rooms.get(roomId).size == 1
       ) {
         socket.join(roomId);
-
+        console.log("join", roomId);
         io.to(roomId).emit("start-game", roomId);
       } else {
+        console.log(" error join", roomId);
         socket.emit("error", "Room Id not available");
       }
     });
 
     socket.on("send-score", ({ roomId, score }) => {
+      console.log("send scrore ", roomId, score);
       socket.broadcast.to(roomId).emit("update-score", score);
     });
   });
