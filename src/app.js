@@ -2,10 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 var cors = require("cors");
-const http = require("http");
 
 const authRoutes = require("./routes/auth");
-const socketService = require("./services/socketio");
 
 require("./db/mongoose");
 require("./services/passport");
@@ -13,8 +11,6 @@ require("./services/passport");
 const app = express();
 
 app.set("view engine", "ejs");
-
-socketService(http.createServer(app));
 
 app.use(cors());
 
