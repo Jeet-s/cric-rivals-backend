@@ -1,5 +1,14 @@
-const app = require('./app');
+const app = require("./app");
 
-app.listen(3000, 'localhost', () => {
-  console.log('listening on *:3000');
+const port = process.env.PORT || 3000;
+
+app.get("*", (req, res) => {
+  res.render("error", {
+    title: "404",
+    errorMessage: "Page not found.",
+  });
+});
+
+app.listen(port, "localhost", () => {
+  console.log("listening on *:3000");
 });
