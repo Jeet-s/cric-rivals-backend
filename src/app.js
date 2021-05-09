@@ -4,6 +4,7 @@ const passport = require("passport");
 var cors = require("cors");
 
 const authRoutes = require("./routes/auth");
+const teamRoutes = require("./routes/team");
 
 require("./db/mongoose");
 require("./services/passport");
@@ -32,5 +33,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(authRoutes);
+app.use("/api", teamRoutes);
 
 module.exports = app;
