@@ -12,13 +12,20 @@ module.exports = function socket(server) {
   let users = [];
 
   io.on("connection", (socket) => {
+    var userId = socket.handshake.query.userId;
+    let userRoom = users.find((x) => x.userId == userId);
+    socket.join(userRoom.roomId);
+    userRoom.socketId = socket.id;
     console.log("user connected");
     socket.on("disconnect", () => {
       console.log("user disconnected");
     });
 
     socket.on("create-game", (data) => {
-      if (!io.sockets.adapter.rooms.has(data.roomId)) {
+      if (
+        !io.sockets.adapter.rooms.has(data.roomId) &&
+        users.findIndex((x) => x.userId == userId) == -1
+      ) {
         console.log("create", data.roomId);
         socket.join(data.roomId);
         users.push({ socketId: socket.id, ...data });
@@ -31,7 +38,8 @@ module.exports = function socket(server) {
     socket.on("join-game", (data) => {
       if (
         io.sockets.adapter.rooms.has(data.roomId) &&
-        io.sockets.adapter.rooms.get(data.roomId).size == 1
+        io.sockets.adapter.rooms.get(data.roomId).size == 1 &&
+        users.findIndex((x) => x.userId == userId) == -1
       ) {
         socket.join(data.roomId);
         console.log("join", data.roomId);
@@ -49,3 +57,5 @@ module.exports = function socket(server) {
     });
   });
 };
+
+// rejoin room when user disconnects and reconnects
