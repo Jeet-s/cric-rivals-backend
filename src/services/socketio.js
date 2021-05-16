@@ -28,7 +28,8 @@ module.exports = function socket(server) {
     socket.on("create-game", (data) => {
       if (
         !io.sockets.adapter.rooms.has(data.roomId) &&
-        users.findIndex((x) => x.userId == userId) == -1
+        users.findIndex((x) => x.userId == userId && x.roomId == data.roomId) ==
+          -1
       ) {
         console.log("create", data.roomId);
         socket.join(data.roomId);
@@ -43,7 +44,8 @@ module.exports = function socket(server) {
       if (
         io.sockets.adapter.rooms.has(data.roomId) &&
         io.sockets.adapter.rooms.get(data.roomId).size == 1 &&
-        users.findIndex((x) => x.userId == userId) == -1
+        users.findIndex((x) => x.userId == userId && x.roomId == data.roomId) ==
+          -1
       ) {
         socket.join(data.roomId);
         console.log("join", data.roomId);
