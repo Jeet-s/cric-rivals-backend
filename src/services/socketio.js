@@ -12,10 +12,14 @@ module.exports = function socket(server) {
   let users = [];
 
   io.on("connection", (socket) => {
+    console.log(socket.handshake.query);
     var userId = socket.handshake.query.userId;
     let userRoom = users.find((x) => x.userId == userId);
-    socket.join(userRoom.roomId);
-    userRoom.socketId = socket.id;
+    if (userRoom) {
+      socket.join(userRoom.roomId);
+      userRoom.socketId = socket.id;
+    }
+
     console.log("user connected");
     socket.on("disconnect", () => {
       console.log("user disconnected");
