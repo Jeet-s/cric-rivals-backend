@@ -9,7 +9,7 @@ const auth = async (req, res, next) => {
     let user = await User.find({
       _id: decodedToken._id,
       "tokens.token": token,
-    });
+    }).populate();
 
     if (!user) {
       throw new Error("Authorization failed");

@@ -1,11 +1,15 @@
 let mongoose = require("mongoose");
 
 let UserTeamSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
   teamId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  playingXI: [
+  squad: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Player",

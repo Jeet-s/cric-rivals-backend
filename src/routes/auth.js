@@ -23,7 +23,9 @@ router.get(
 router.post("/auth/login", async (req, res) => {
   try {
     let profile = req.body;
-    const existingUser = await User.findOne({ googleId: req.body.googleId });
+    const existingUser = await User.findOne({
+      googleId: req.body.googleId,
+    }).populate();
 
     if (existingUser) {
       let token = await existingUser.generateAuthToken();
