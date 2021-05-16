@@ -47,6 +47,9 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { virtuals: true });
+
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
 

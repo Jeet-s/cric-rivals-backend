@@ -3,13 +3,13 @@ const User = require("../models/user");
 
 const auth = async (req, res, next) => {
   try {
-    let token = req.header("Authorization").replace("Bearer", "");
+    let token = req.header("authorization").replace("Bearer ", "");
     let decodedToken = jwt.verify(token, "cric-rivals-jwt-secret");
 
-    let user = await User.find({
+    let user = await User.findOne({
       _id: decodedToken._id,
       "tokens.token": token,
-    }).populate();
+    }).populate("selectedTeam");
 
     if (!user) {
       throw new Error("Authorization failed");

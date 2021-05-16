@@ -51,7 +51,10 @@ router.post("/auth/login", async (req, res) => {
 
 router.get("/auth/current-user", auth, async (req, res) => {
   try {
-    res.send(req.user);
+    res.send({
+      user: req.user,
+      token: req.token,
+    });
   } catch (error) {
     res.status(500).send();
   }

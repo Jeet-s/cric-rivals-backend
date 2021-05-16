@@ -11,8 +11,13 @@ let UserTeamSchema = new mongoose.Schema({
   },
   squad: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Player",
+      playerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Player",
+      },
+      order: {
+        type: Number,
+      },
     },
   ],
 });

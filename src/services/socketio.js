@@ -9,32 +9,36 @@ module.exports = function socket(server) {
     },
   });
 
+  let users = [];
+
   io.on("connection", (socket) => {
     console.log("user connected");
     socket.on("disconnect", () => {
       console.log("user disconnected");
     });
 
-    socket.on("create-game", (roomId) => {
-      if (!io.sockets.adapter.rooms.has(roomId)) {
-        console.log("create", roomId);
-        socket.join(roomId);
+    socket.on("create-game", (data) => {
+      if (!io.sockets.adapter.rooms.has(data.roomId)) {
+        console.log("create", data.roomId);
+        socket.join(data.roomId);
+        users.push({ socketId: socket.id, ...data });
       } else {
-        console.log("error create", roomId);
+        console.log("error create", data.roomId);
         socket.emit("error", "Room Id not available");
       }
     });
 
-    socket.on("join-game", (roomId) => {
+    socket.on("join-game", (data) => {
       if (
-        io.sockets.adapter.rooms.has(roomId) &&
-        io.sockets.adapter.rooms.get(roomId).size == 1
+        io.sockets.adapter.rooms.has(data.roomId) &&
+        io.sockets.adapter.rooms.get(data.roomId).size == 1
       ) {
-        socket.join(roomId);
-        console.log("join", roomId);
-        io.to(roomId).emit("start-game", roomId);
+        socket.join(data.roomId);
+        console.log("join", data.roomId);
+        let user = { socketId: socket.id, ...data };
+        io.to(data.roomId).emit("start-game", data);
       } else {
-        console.log(" error join", roomId);
+        console.log(" error join", data.roomId);
         socket.emit("error", "Room Id not available");
       }
     });

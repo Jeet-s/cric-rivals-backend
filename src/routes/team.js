@@ -25,29 +25,51 @@ router.get("/teams/all/basic", auth, async (req, res) => {
   }
 });
 
-router.post("teams/user", auth, async (req, res) => {
+router.get("/teams/user/squad/:userId", async (req, res) => {
   try {
-    if (auth.user.selectedTeam) {
+    let userTeam = await UserTeam.findOne({ userId: req.params.userId });
+    let team = await Team.findOne({ _id: userTeam.teamId })
+      .populate("squad")
+      .lean();
+    // let squad = team.squad.toArray();
+    team.squad = team.squad.map((p) => {
+      p.order = userTeam.squad.find((x) => x.playerId.equals(p._id)).order;
+      return p;
+    });
+    res.send(team.squad);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+router.post("/teams/user", auth, async (req, res) => {
+  try {
+    if (req.user.selectedTeam) {
       let userTeam = await UserTeam.updateOne(
-        { _id: auth.user.selectedTeam._id },
+        { _id: req.user.selectedTeam._id },
         {
           $set: {
             teamId: req.body._id,
-            squad: req.body.squad.map(
-              (x) => new mongoose.Types.ObjectId(x._id)
-            ),
+            squad: req.body.squad.map((x) => ({
+              playerId: new mongoose.Types.ObjectId(x._id),
+              order: x.order,
+            })),
           },
         }
       );
       res.send(userTeam);
     } else {
       let userTeam = await UserTeam.create({
-        userId: auth.user._id,
+        userId: req.user._id,
         teamId: req.body._id,
-        squad: req.body.squad.map((x) => new mongoose.Types.ObjectId(x._id)),
+        squad: req.body.squad.map((x) => ({
+          playerId: new mongoose.Types.ObjectId(x._id),
+          order: x.order,
+        })),
       });
-      auth.user.selectedTeam = userTeam._id;
-      await auth.user.save();
+      req.user.selectedTeam = userTeam._id;
+      await req.user.save();
       res.send(userTeam);
     }
   } catch (error) {
