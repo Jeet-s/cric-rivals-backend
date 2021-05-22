@@ -58,9 +58,11 @@ module.exports = function socket(server) {
 
         let startData = {
           roomId: data.roomId,
-          userId: users.find((x) => x.roomId == data.roomId).userId,
+          userId: users.find((x) => x.roomId == data.roomId && x.userId).userId,
           opponentId: data.opponentId,
         };
+
+        console.log("STRAT DTAA", startData);
 
         io.to(data.roomId).emit("start-game", startData);
       } else {
