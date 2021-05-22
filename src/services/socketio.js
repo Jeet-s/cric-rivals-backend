@@ -36,6 +36,7 @@ module.exports = function socket(server) {
         console.log("create", data.roomId);
         socket.join(data.roomId);
         users.push({ socketId: socket.id, ...data });
+        console.log("join GAME DATA=>", { socketId: socket.id, ...data });
       } else {
         console.log("error create", data.roomId);
         socket.emit("error", "Room Id not available");
@@ -56,6 +57,8 @@ module.exports = function socket(server) {
         let user = { socketId: socket.id, ...data };
         users.push(user);
 
+        console.log("join GAME DATA=>", user);
+
         let startData = {
           roomId: data.roomId,
           userId: users.find(
@@ -63,6 +66,8 @@ module.exports = function socket(server) {
           ),
           opponentId: data.opponentId,
         };
+
+        console.log("START GAME DATA=>", startData);
 
         io.to(data.roomId).emit("start-game", startData);
       } else {
