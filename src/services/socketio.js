@@ -64,7 +64,7 @@ module.exports = function socket(server) {
           opponentId: data.opponentId,
         };
 
-        io.to(data.roomId).emit("start-game", data);
+        io.to(data.roomId).emit("start-game", startData);
       } else {
         console.log(" error join", data.roomId);
         socket.emit("error", "Room Id not available");
