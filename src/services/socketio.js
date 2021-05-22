@@ -18,13 +18,17 @@ module.exports = function socket(server) {
       (x) => x.userId == userId || x.opponentId == userId
     );
     if (userRoom) {
+      console.log(
+        "Joined room again",
+        io.sockets.adapter.rooms.get(userRoom.roomId)
+      );
       socket.join(userRoom.roomId);
       userRoom.socketId = socket.id;
     }
 
     console.log("user connected");
-    socket.on("disconnect", () => {
-      console.log("user disconnected");
+    socket.on("disconnect", (data) => {
+      console.log("user disconnected", data);
     });
 
     socket.on("create-game", (data) => {
