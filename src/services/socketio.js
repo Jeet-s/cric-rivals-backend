@@ -49,6 +49,18 @@ module.exports = function socket(server) {
 
     socket.on("join-game", (data) => {
       console.log("Before Join ============>>>>>>", users);
+      console.log(
+        io.sockets.adapter.rooms.has(data.roomId),
+        io.sockets.adapter.rooms.get(data.roomId).size == 1,
+        users.findIndex(
+          (x) => x.opponentId == userId && x.roomId == data.roomId
+        ) == -1
+      );
+      console.log(
+        users.findIndex(
+          (x) => x.opponentId == userId && x.roomId == data.roomId
+        )
+      );
       if (
         io.sockets.adapter.rooms.has(data.roomId) &&
         io.sockets.adapter.rooms.get(data.roomId).size == 1 &&
