@@ -14,7 +14,9 @@ module.exports = function socket(server) {
   io.on("connection", (socket) => {
     console.log(socket.handshake.query);
     var userId = socket.handshake.query.userId;
-    let userRoom = users.find((x) => x.userId == userId);
+    let userRoom = users.find(
+      (x) => x.userId == userId || x.opponentId == userId
+    );
     if (userRoom) {
       socket.join(userRoom.roomId);
       userRoom.socketId = socket.id;
@@ -44,12 +46,24 @@ module.exports = function socket(server) {
       if (
         io.sockets.adapter.rooms.has(data.roomId) &&
         io.sockets.adapter.rooms.get(data.roomId).size == 1 &&
-        users.findIndex((x) => x.userId == userId && x.roomId == data.roomId) ==
-          -1
+        users.findIndex(
+          (x) => x.opponentId == userId && x.roomId == data.roomId
+        ) == -1
       ) {
         socket.join(data.roomId);
         console.log("join", data.roomId);
+
         let user = { socketId: socket.id, ...data };
+        users.push(user);
+
+        let startData = {
+          roomId: data.roomId,
+          userId: users.find(
+            (x) => x.userId == userId && x.roomId == data.roomId
+          ),
+          opponentId: data.opponentId,
+        };
+
         io.to(data.roomId).emit("start-game", data);
       } else {
         console.log(" error join", data.roomId);
@@ -63,5 +77,3 @@ module.exports = function socket(server) {
     });
   });
 };
-
-// rejoin room when user disconnects and reconnects
