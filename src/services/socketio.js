@@ -28,6 +28,8 @@ module.exports = function socket(server) {
     });
 
     socket.on("create-game", (data) => {
+      console.log("Before Create ============>>>>>>", users);
+
       if (
         !io.sockets.adapter.rooms.has(data.roomId) &&
         users.findIndex((x) => x.userId == userId && x.roomId == data.roomId) ==
@@ -36,6 +38,8 @@ module.exports = function socket(server) {
         console.log("create", data.roomId);
         socket.join(data.roomId);
         users.push({ socketId: socket.id, ...data });
+        console.log("After Create ============>>>>>>", users);
+
         console.log("join GAME DATA=>", { socketId: socket.id, ...data });
       } else {
         console.log("error create", data.roomId);
@@ -44,6 +48,7 @@ module.exports = function socket(server) {
     });
 
     socket.on("join-game", (data) => {
+      console.log("Before Join ============>>>>>>", users);
       if (
         io.sockets.adapter.rooms.has(data.roomId) &&
         io.sockets.adapter.rooms.get(data.roomId).size == 1 &&
@@ -68,6 +73,7 @@ module.exports = function socket(server) {
         };
 
         console.log("START GAME DATA=>", startData);
+        console.log("After Join ============>>>>>>", users);
 
         io.to(data.roomId).emit("start-game", startData);
       } else {
