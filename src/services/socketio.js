@@ -17,14 +17,14 @@ module.exports = function socket(server) {
     let userRoom = users.find(
       (x) => x.userId == userId || x.opponentId == userId
     );
-    if (userRoom) {
-      console.log(
-        "Joined room again",
-        io.sockets.adapter.rooms.get(userRoom.roomId)
-      );
-      socket.join(userRoom.roomId);
-      userRoom.socketId = socket.id;
-    }
+    // if (userRoom) {
+    //   console.log(
+    //     "Joined room again",
+    //     io.sockets.adapter.rooms.get(userRoom.roomId)
+    //   );
+    //   socket.join(userRoom.roomId);
+    //   userRoom.socketId = socket.id;
+    // }
 
     console.log("user connected");
     socket.on("disconnect", (data) => {
