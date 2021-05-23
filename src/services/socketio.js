@@ -79,7 +79,7 @@ module.exports = function socket(server) {
     socket.on("match-over", ({ roomId }) => {
       console.log("match-over", roomId);
       users = users.filter((u) => u.roomId != roomId);
-      io.sockets.adapter.rooms[roomId].forEach(function (s) {
+      io.sockets.adapter.rooms[roomId]?.forEach(function (s) {
         s.leave(roomId);
       });
     });
