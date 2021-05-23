@@ -25,7 +25,7 @@ router.get("/teams/all/basic", auth, async (req, res) => {
   }
 });
 
-router.get("/teams/user/squad/:userId", async (req, res) => {
+router.get("/teams/user/:userId", async (req, res) => {
   try {
     let userTeam = await UserTeam.findOne({ userId: req.params.userId });
     let team = await Team.findOne({ _id: userTeam.teamId })
@@ -36,7 +36,7 @@ router.get("/teams/user/squad/:userId", async (req, res) => {
       p.order = userTeam.squad.find((x) => x.playerId.equals(p._id)).order;
       return p;
     });
-    res.send(team.squad);
+    res.send(team);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
