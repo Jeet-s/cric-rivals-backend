@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000;
 const socketService = require("./services/socketio");
 const http = require("http");
 
-var server = http.createServer(app).listen(port, () => {
+var server = app.listen(port, () => {
   console.log("listening on :", port);
 });
 
