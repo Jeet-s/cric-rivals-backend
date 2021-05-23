@@ -2,7 +2,7 @@ const socketio = require("socket.io");
 module.exports = function socket(server) {
   let io = socketio(server, {
     cors: {
-      origin: "http://localhost",
+      origin: "*",
       methods: ["GET", "POST"],
       allowedHeaders: ["my-custom-header"],
       credentials: true,
