@@ -75,5 +75,13 @@ module.exports = function socket(server) {
       console.log("send scrore ", roomId, score);
       socket.broadcast.to(roomId).emit("update-score", score);
     });
+
+    socket.on("match-over", ({ roomId }) => {
+      console.log("match-over", roomId);
+      users = users.filter((u) => u.roomId != roomId);
+      io.sockets.clients(roomId).forEach(function (s) {
+        s.leave(roomId);
+      });
+    });
   });
 };
