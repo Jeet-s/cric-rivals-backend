@@ -82,6 +82,8 @@ module.exports = function socket(server) {
       io.sockets.adapter.rooms[roomId]?.forEach(function (s) {
         s.leave(roomId);
       });
+
+      console.log(io.sockets.adapter.rooms.get(roomId).size, users);
     });
   });
 };
