@@ -19,7 +19,7 @@ module.exports = function socket(server) {
     );
     if (userRoom) {
       socket.join(userRoom.roomId);
-      userRoom.socketId = socket.id;
+      userRoom.socket = socket;
     }
 
     console.log("user connected");
@@ -35,7 +35,7 @@ module.exports = function socket(server) {
       ) {
         console.log("create", data.roomId);
         socket.join(data.roomId);
-        users.push({ socketId: socket.id, ...data });
+        users.push({ socket: socket, ...data });
       } else {
         console.log("error create", data.roomId);
         socket.emit("error", "Room Id not available");
@@ -53,7 +53,7 @@ module.exports = function socket(server) {
         socket.join(data.roomId);
         console.log("join", data.roomId);
 
-        let user = { socketId: socket.id, ...data };
+        let user = { socket: socket, ...data };
         users.push(user);
 
         let startData = {
@@ -78,10 +78,12 @@ module.exports = function socket(server) {
 
     socket.on("match-over", ({ roomId }) => {
       console.log("match-over", roomId);
+      users
+        .filter((u) => u.roomId == roomId)
+        .forEach(function (s) {
+          s.socket.leave(roomId);
+        });
       users = users.filter((u) => u.roomId != roomId);
-      io.sockets.adapter.rooms[roomId]?.forEach(function (s) {
-        s.leave(roomId);
-      });
 
       console.log(io.sockets.adapter.rooms.get(roomId).size, users);
     });
