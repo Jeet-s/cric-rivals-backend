@@ -85,7 +85,7 @@ module.exports = function socket(server) {
         });
       users = users.filter((u) => u.roomId != roomId);
 
-      console.log(io.sockets.adapter.rooms.get(roomId).size, users);
+      // console.log(io.sockets.adapter.rooms.get(roomId).size, users);
     });
   });
 };
