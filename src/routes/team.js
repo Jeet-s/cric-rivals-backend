@@ -43,6 +43,18 @@ router.get("/teams/user/:userId", async (req, res) => {
   }
 });
 
+router.get("/teams/:teamId", async (req, res) => {
+  try {
+    let team = await Team.findOne({ _id: req.params.teamId })
+      .populate("squad")
+      .lean();
+    res.send(team);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
 router.post("/teams/user", auth, async (req, res) => {
   try {
     if (req.user.selectedTeam) {
