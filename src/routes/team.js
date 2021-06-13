@@ -58,8 +58,8 @@ router.get("/teams/:teamId", async (req, res) => {
 router.post("/teams/user", auth, async (req, res) => {
   try {
     if (req.user.selectedTeam) {
-      let userTeam = await UserTeam.updateOne(
-        { _id: req.user.selectedTeam._id },
+      let userTeam = await UserTeam.findByIdAndUpdate(
+        req.user.selectedTeam._id,
         {
           $set: {
             teamId: req.body._id,
