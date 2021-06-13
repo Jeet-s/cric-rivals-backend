@@ -68,7 +68,8 @@ router.post("/teams/user", auth, async (req, res) => {
               order: x.order,
             })),
           },
-        }
+        },
+        { new: true }
       );
       res.send(userTeam);
     } else {
