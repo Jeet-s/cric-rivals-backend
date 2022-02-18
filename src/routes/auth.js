@@ -15,8 +15,8 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:8100",
-    failureRedirect: "http://localhost:8100",
+    successRedirect: "https://cric-rivals.web.app",
+    failureRedirect: "https://cric-rivals.web.app",
   })
 );
 
