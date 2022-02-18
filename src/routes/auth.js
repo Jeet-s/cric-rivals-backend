@@ -43,7 +43,12 @@ router.post("/auth/login", async (req, res) => {
       image: req.body.image,
     }).save();
 
-    res.send(user);
+    let token = await user.generateAuthToken();
+
+    res.send({
+      user,
+      token,
+    });
   } catch (error) {
     res.status(500).send();
   }
